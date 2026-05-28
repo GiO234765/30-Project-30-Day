@@ -239,6 +239,124 @@ select.form-control{cursor:pointer}
 ::-webkit-scrollbar{width:5px;height:5px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+
+/* ===== RESPONSIVE ===== */
+/* Sidebar overlay for mobile */
+.sidebar-overlay{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9;
+}
+/* Mobile bottom nav */
+.bottom-nav{
+  display:none;position:fixed;bottom:0;left:0;right:0;
+  background:var(--surface);border-top:1px solid var(--border);
+  z-index:20;padding:0;
+  padding-bottom:env(safe-area-inset-bottom);
+}
+.bottom-nav-items{display:flex;align-items:stretch}
+.bottom-nav-item{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:8px 4px;gap:3px;cursor:pointer;font-size:10px;color:var(--text3);
+  transition:color .15s;border:none;background:none;font-family:'DM Sans',sans-serif;
+}
+.bottom-nav-item.active{color:var(--accent)}
+.bottom-nav-item .bn-icon{font-size:20px;line-height:1}
+.hamburger{
+  display:none;width:38px;height:38px;border-radius:var(--radius-sm);
+  background:var(--surface2);border:1px solid var(--border);
+  align-items:center;justify-content:center;cursor:pointer;font-size:18px;
+  flex-shrink:0;
+}
+
+/* Tablet (≤1024px): collapse sidebar to icon-only */
+@media(max-width:1024px){
+  :root{--sidebar-w:64px}
+  .nav-section{display:none}
+  .nav-item span:not(.nav-icon){display:none}
+  .nav-badge{display:none}
+  .sidebar-logo .logo-text,.sidebar-logo .logo-sub{display:none}
+  .sidebar-logo{justify-content:center;padding:18px 0}
+  .nav-item{justify-content:center;padding:12px;margin:2px 6px}
+  .nav-item.active::before{left:-6px}
+  .sidebar-footer{padding:10px 6px}
+  .user-card{justify-content:center;padding:8px}
+  .user-name,.user-role{display:none}
+  .two-col{grid-template-columns:1fr}
+  .content{padding:20px}
+}
+
+/* Mobile (≤768px): hide sidebar, show bottom nav */
+@media(max-width:768px){
+  html,body{overflow:hidden}
+  .sidebar{
+    position:fixed;top:0;left:0;bottom:0;
+    width:260px!important;z-index:10;
+    transform:translateX(-100%);transition:transform .3s ease;
+    overflow-y:auto;
+  }
+  .sidebar.open{transform:translateX(0)}
+  .sidebar-overlay.open{display:block}
+  /* Restore text in slide-out drawer */
+  .nav-section{display:block}
+  .nav-item span:not(.nav-icon){display:inline}
+  .nav-badge{display:inline-flex}
+  .sidebar-logo .logo-text,.sidebar-logo .logo-sub{display:block}
+  .sidebar-logo{justify-content:flex-start;padding:22px 20px 18px}
+  .nav-item{justify-content:flex-start;padding:10px 12px;margin:1px 8px}
+  .nav-item.active::before{left:-8px}
+  .sidebar-footer{padding:16px}
+  .user-card{justify-content:flex-start;padding:10px}
+  .user-name,.user-role{display:block}
+  /* Main takes full width */
+  .main{width:100%}
+  .topbar{padding:0 14px;gap:10px;height:56px}
+  .page-title{font-size:17px}
+  .topbar-search{display:none}
+  .hamburger{display:flex}
+  .content{
+    padding:14px 14px 80px;/* bottom padding for bottom nav */
+    overflow-y:auto;
+  }
+  .bottom-nav{display:block}
+  /* Stack stats 2-per-row on mobile */
+  .stats-grid{grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+  .stat-value{font-size:24px}
+  .two-col{grid-template-columns:1fr;gap:14px}
+  /* Toolbar wrapping */
+  .toolbar{flex-wrap:wrap;gap:8px}
+  .toolbar .search-box{max-width:100%;flex:1 1 160px}
+  .toolbar select{flex:1 1 120px}
+  .toolbar .btn{flex-shrink:0}
+  /* Tables: hide less important columns */
+  .table-hide-mobile{display:none}
+  /* Card headers */
+  .card-header{padding:14px 16px;flex-wrap:wrap;gap:8px}
+  .card-body{padding:14px}
+  /* Attendance grid smaller */
+  .att-grid{grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:8px}
+  /* Modals full-screen on mobile */
+  .modal{width:100%!important;max-width:100vw;max-height:92vh;border-radius:20px 20px 0 0}
+  .modal-overlay{align-items:flex-end}
+  /* Settings */
+  .two-col .section-gap{gap:14px}
+  /* Toast */
+  .toast-container{bottom:76px;right:12px;left:12px}
+  .toast{min-width:0;width:100%}
+  /* Tabs */
+  .tabs{overflow-x:auto;white-space:nowrap;padding-bottom:2px}
+}
+
+/* Extra small (≤420px) */
+@media(max-width:420px){
+  .stats-grid{grid-template-columns:1fr 1fr;gap:8px}
+  .stat-card{padding:14px}
+  .stat-value{font-size:22px}
+  .stat-icon{width:36px;height:36px;font-size:16px}
+  .content{padding:10px 10px 80px}
+  .topbar{padding:0 10px;height:52px}
+  .btn-sm{padding:5px 9px;font-size:11px}
+  thead th{padding:8px 10px;font-size:10px}
+  tbody td{padding:10px 10px;font-size:13px}
+}
 /* SEARCH TOOLBAR */
 .toolbar{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap}
 .search-box{
@@ -261,6 +379,7 @@ select.form-control{cursor:pointer}
 </head>
 <body>
 <div class="app">
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
   <!-- SIDEBAR -->
   <aside class="sidebar">
     <div class="sidebar-logo">
@@ -313,6 +432,7 @@ select.form-control{cursor:pointer}
   <!-- MAIN CONTENT -->
   <div class="main">
     <div class="topbar">
+      <div class="hamburger" onclick="toggleSidebar()" id="hamburger">☰</div>
       <div class="page-title" id="pageTitle">Dashboard</div>
       <div class="topbar-search">
         <span style="color:var(--text3)">🔍</span>
@@ -442,7 +562,7 @@ select.form-control{cursor:pointer}
         <div class="card">
           <div class="table-wrap">
             <table>
-              <thead><tr><th>Student</th><th>ID</th><th>Course</th><th>Grade</th><th>Status</th><th>Actions</th></tr></thead>
+              <thead><tr><th>Student</th><th class="table-hide-mobile">ID</th><th>Course</th><th>Grade</th><th>Status</th><th>Actions</th></tr></thead>
               <tbody id="studentsTable"></tbody>
             </table>
           </div>
@@ -517,7 +637,7 @@ select.form-control{cursor:pointer}
           <div class="card">
             <div class="table-wrap">
               <table>
-                <thead><tr><th>Student</th><th>Course</th><th>Midterm</th><th>Final</th><th>Assignment</th><th>Total</th><th>Grade</th><th>Actions</th></tr></thead>
+                <thead><tr><th>Student</th><th>Course</th><th class="table-hide-mobile">Midterm</th><th class="table-hide-mobile">Final</th><th class="table-hide-mobile">Assignment</th><th>Total</th><th>Grade</th><th>Actions</th></tr></thead>
                 <tbody id="gradesTable"></tbody>
               </table>
             </div>
@@ -795,6 +915,31 @@ select.form-control{cursor:pointer}
   </div>
 </div>
 
+
+<!-- BOTTOM NAV (mobile) -->
+<nav class="bottom-nav">
+  <div class="bottom-nav-items">
+    <button class="bottom-nav-item active" id="bn-dashboard" onclick="navigate('dashboard');setBottomNav('dashboard')">
+      <span class="bn-icon">📊</span>Home
+    </button>
+    <button class="bottom-nav-item" id="bn-students" onclick="navigate('students');setBottomNav('students')">
+      <span class="bn-icon">👥</span>Students
+    </button>
+    <button class="bottom-nav-item" id="bn-courses" onclick="navigate('courses');setBottomNav('courses')">
+      <span class="bn-icon">📚</span>Courses
+    </button>
+    <button class="bottom-nav-item" id="bn-attendance" onclick="navigate('attendance');setBottomNav('attendance')">
+      <span class="bn-icon">✅</span>Attend
+    </button>
+    <button class="bottom-nav-item" id="bn-grades" onclick="navigate('grades');setBottomNav('grades')">
+      <span class="bn-icon">🏆</span>Grades
+    </button>
+    <button class="bottom-nav-item" id="bn-settings" onclick="navigate('settings');setBottomNav('settings')">
+      <span class="bn-icon">⚙️</span>Settings
+    </button>
+  </div>
+</nav>
+
 <!-- Toast Container -->
 <div class="toast-container" id="toastContainer"></div>
 
@@ -939,7 +1084,7 @@ function renderStudents(){
       <td><div style="display:flex;align-items:center;gap:8px">
         <div class="avatar ${getAvClass(s.first)}">${getInitials(s.first,s.last)}</div>${s.first} ${s.last}
       </div></td>
-      <td style="color:var(--text3)">${s.id}</td>
+      <td class="table-hide-mobile" style="color:var(--text3)">${s.id}</td>
       <td>${s.course}</td>
       <td>${getStudentGrade(s.id)}</td>
       <td>${statusBadge(s.status)}</td>
@@ -1161,7 +1306,7 @@ function renderGrades(){
     return`<tr>
       <td>${s?s.first+' '+s.last:g.studentId}</td>
       <td>${g.course}</td>
-      <td>${g.mid}</td><td>${g.final}</td><td>${g.assignment}</td>
+      <td class="table-hide-mobile">${g.mid}</td><td class="table-hide-mobile">${g.final}</td><td class="table-hide-mobile">${g.assignment}</td>
       <td><strong>${total}%</strong></td>
       <td><span class="badge ${gc}">${gl}</span></td>
       <td><div style="display:flex;gap:6px">
@@ -1278,6 +1423,31 @@ function handleGlobalSearch(q){
 }
 
 function renderAll(){renderDashboard();}
+
+
+// ===== RESPONSIVE HELPERS =====
+function toggleSidebar(){
+  const s=document.querySelector('.sidebar');
+  const o=$('sidebarOverlay');
+  s.classList.toggle('open');
+  o.classList.toggle('open');
+}
+function closeSidebar(){
+  document.querySelector('.sidebar').classList.remove('open');
+  $('sidebarOverlay').classList.remove('open');
+}
+function setBottomNav(page){
+  document.querySelectorAll('.bottom-nav-item').forEach(b=>b.classList.remove('active'));
+  const el=$('bn-'+page);
+  if(el)el.classList.add('active');
+}
+// Close sidebar on nav (mobile)
+const _origNav=navigate;
+function navigate(page){
+  closeSidebar();
+  setBottomNav(page);
+  _origNav(page);
+}
 
 // init
 const d=new Date();$('attDate')&&($('attDate').value=d.toISOString().split('T')[0]);
